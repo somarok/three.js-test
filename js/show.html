@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		<script src="/three.js"></script>
+		<script>
+			//three.js 로 구현하기 위해 기본적으로 필요한 씬, 카메라, 랜더러를 설정.
+            const scene = new THREE.Scene();
+
+            /* 카메라 파람값
+            1. 시야(Fov) : 단위는 도. 화면에 표시되는 장면의 범위.
+            2. 종횡비(aspect ratio) : 가로세로 비율. 가로길이를 높이길이로 나눈 값 (4:3, 16:9 등)
+            3. 근거리 클리핑 평면(near clipping plane) : 수치가 작을수록 카메라와 오브젝트 사이의 거리가 작은 부분까지 담을 수 있다.
+            4. 원거리 클리핑 평면(far clipping plane) : 줌아웃을 얼마나 당길 수 있는지에 대한 거리.
+                근거리, 원거리 클리핑 평면 수치에 따라 카메라의 촬영 범위가 결정된다.
+            */
+            const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 ); 
+
+            const renderer = new THREE.WebGLRenderer(); //webGL을 지원하지 않을 경우 대체수단 이자, 영역의 너비와 크기 지정.
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            document.body.appendChild( renderer.domElement );
+            const geometry = new THREE.BoxGeometry(); //큐브 만들기 위한 박스 객체 생성
+			const material = new THREE.MeshBasicMaterial( { color: 0xFFD4DF  } ); // 큐브 재료 및 색 지정
+			const cube = new THREE.Mesh( geometry, material ); // geomerty에 meterial을 입히는 OBJ 
+			scene.add( cube ); //씬에다가 큐브를 집어넣는다. 씬의 (0,0,0) 좌표에 추가됨
+            
+            /* 여기까지 씬 안에 카메라와 큐브가 같은 위치에 있기 때문에 카메라를 살짝 이동시킨다. */        
+			camera.position.z = 5; //카메라의 z열값을 5로 수정.
+
+            //씬을 그리기 위해서 랜더링을 해야함.
+			const animate = function () {
+				requestAnimationFrame( animate ); 
+
+                /* 큐브 애니메이션. 큐브가 회전하게 만든다. */
+				cube.rotation.x += 0.01;
+				cube.rotation.y += 0.01;
+
+				renderer.render( scene, camera ); //랜더러에 위에서 정의한 씬과 카메라를 넣어준다.
+			};
+
+			animate();
+		</script>
+	</body>
+</html>
